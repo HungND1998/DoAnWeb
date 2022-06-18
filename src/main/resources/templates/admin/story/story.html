@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Trang quản trị</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{http://localhost:9000/truyen/dashboard.css}">
+</head>
+<body>
+
+<section th:replace="/admin/layout/navbar"></section>
+<div class="container-fluid">
+    <div class="row">
+        <section th:replace="/admin/layout/sidebar"></section>
+        
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            
+            <h4 class="text-uppercase text-center pb-3">quản lý truyện</h4>
+            
+            <div th:if="${show == 'story'}">
+                <div class="table">
+                    <table class="table table-bordered table-hover table-light table-striped table-sm">
+                        <thead class="thead-dark ">
+                        <tr class="text-center">
+                            <th class="align-middle">ID</th>
+                            <th class="align-middle">Tên truyện</th>
+                            <th width="40%" class="align-middle">Tóm tắt</th>
+                            <th class="align-middle">Ngày tạo</th>
+                            <th class="align-middle">Tác giả</th>
+                            <th class="align-middle">Trạng thái</th>
+                            <th class="align-middle"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr th:each="story : ${stories}">
+                            <td class="align-middle"><a th:text="${story.getId()}"
+                                   th:href="@{/admin/chapter(story_id=${story.getId()})}"></a></td>
+                            <td class="align-middle"><a th:text="${story.getStoryName()}"
+                                   th:href="@{/admin/chapter(story_id=${story.getId()})}"></a></td>
+                            <td th:text="${story.getDescription()}" class="align-middle" width="40%"></td>
+                            <td th:text="${story.getCreatedAt()}" class="align-middle"></td>
+                            <td th:text="${story.getUser.getUsername()}" class="align-middle"></td>
+                            <td th:text="${story.isStatus()}" class="align-middle"></td>
+                            <td class="align-middle">
+                                <div th:if="${story.isStatus()}">
+                                    <a th:href="@{/admin/story/status(story_id= ${story.getId()}, code= false)}">
+                                        <button class="btn btn-warning">Tắt</button>
+                                    </a>
+                                </div>
+                                <div th:if="${!story.isStatus()}">
+                                    <a th:href="@{/admin/story/status(story_id= ${story.getId()}, code= true)}">
+                                        <button class="btn btn-success">Bật</button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div th:if="${show == 'chapter'}">
+                <div class="table">
+                    <table class="table table-bordered table-hover table-light table-striped table-sm">
+                        <thead class="thead-dark ">
+                        <tr class="text-center">
+                            <th class="align-middle">ID</th>
+                            <th class="align-middle">Tên chương</th>
+                            <th class="align-middle">ID truyện</th>
+                            <th class="align-middle">Số tiền</th>
+                            <th class="align-middle">trạng thái</th>
+                            <th class="align-middle">Ngày tạo</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr th:each="chapter : ${chapters}">
+                            <td th:text="${chapter.getId()}" class="align-middle"></td>
+                            <td th:text="${chapter.getChapterName()}" class="align-middle"></td>
+                            <td th:text="${chapter.getStory.getId()}" class="align-middle"></td>
+                            <td th:text="${chapter.getPrice()}" class="align-middle"></td>
+                            <td th:text="${chapter.isStatus()}" class="align-middle"></td>
+                            <td th:text="${chapter.getCreateAt()}" class="align-middle"></td>
+                            <td>
+                                <div th:if="${chapter.isStatus()}">
+                                    <a th:href="@{/admin/chapter/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code= false)}">
+                                        <button class="btn btn-warning">Tắt</button>
+                                    </a>
+                                </div>
+                                <div th:if="${!chapter.isStatus()}">
+                                    <a th:href="@{/admin/chapter/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code= true)}">
+                                        <button class="btn btn-success">Bật</button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(chapterDraft) == false}">
+                    <h5 class="text-center text-uppercase">Chương truyện đang chờ kích hoạt</h5>
+                    <div class="table">
+                        <table class="table table-bordered table-hover table-light table-striped table-sm">
+                            <thead class="thead-dark ">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th width="25%" class="align-middle">Tên chương</th>
+                                <th width="10%" class="align-middle">ID truyện</th>
+                                <th width="15%" class="align-middle">Số tiền</th>
+                                <th width="20%" class="align-middle">Ngày hẹn giờ</th>
+                                <th width="10%" class="align-middle">Trạng thái</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-center">
+                            <tr th:each="chapter : ${chapterDraft}">
+                                <td th:text="${chapter.getId()}" class="align-middle"></td>
+                                <td th:text="${chapter.getChapterName()}" width="25%" class="align-middle"></td>
+                                <td th:text="${chapter.getStory.getId()}" width="10%" class="align-middle"></td>
+                                <td th:text="${chapter.getPrice()}" width="15%" class="align-middle"></td>
+                                <td th:text="${chapter.getTime()}" width="20%" class="align-middle"></td>
+                                <td th:text="${chapter.getStatus()}" width="10%" class="align-middle"></td>
+                                <td class="align-middle">
+                                    <a th:href="@{/admin/chapter-draft/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code='ACTIVE')}">
+                                        <button class="btn btn-success">Bật</button>
+                                    </a>
+                                    <a th:href="@{/admin/chapter-draft/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code='DELETE')}">
+                                        <button class="btn btn-danger">Xoá</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            
+            
+            </div>
+        
+        
+        </main>
+    </div>
+</div>
+
+</body>
+</html>

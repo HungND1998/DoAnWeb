@@ -1,0 +1,44 @@
+<footer class="text-center text-lg-start bg-dark text-muted" style="margin-top: 30px">
+    <section
+            class="d-flex justify-content-center justify-content-lg-between p-1">
+    </section>
+    <section class="">
+        <div class="container text-center text-md-start mt-5">
+            <div class="row mt-3">
+                <div class="col-md-4 col-lg-4 col-xl-3 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4" style="color:lawngreen">
+                        <i class="fas fa-gem me-3"></i>Truyện online
+                    </h6>
+                    <p>
+                        Truyện online được xây dựng nhằm mục đích bảo vệ đồ án, có thể sẽ được cập nhật các chức năng
+                        khác trong thời gian tới
+                    </p>
+                </div>
+                <div class="col-md-4 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        Thể loại
+                    </h6>
+                    <p th:each="category: ${categories}" th:if="${category.isStatus()} == true">
+                        <a th:href="@{/category(id=${category.getId()})}" class="text-reset"
+                           th:text="${category.categoryName}"></a>
+                    </p>
+                </div>
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        Liên hệ
+                    </h6>
+                    <p> 160 Nguyễn Văn Trỗi - Hà Đông</p>
+                    <p>
+                        truyenonline@gmail.com
+                    </p>
+                    <p>+ 84 398002928</p>
+                    <p>+ 84 498002928</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2022 Copyright:
+        <a class="text-reset fw-bold" th:href="@{/}">truyenonline.com</a>
+    </div>
+</footer>

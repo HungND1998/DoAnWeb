@@ -1,0 +1,174 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Spring Boot + Bootstrap</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .carousel-inner img {
+            width: 100%;
+        }
+        .newest {
+            width: 100%;
+            height: 50px;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <section th:replace="/layout/header"></section>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-5">
+                        <img th:src="${story.getImage()}" width="90%"/>
+                    </div>
+
+                    <div class="col-md-7">
+                        <h4 class="text-center" th:text="${story.getName()}"></h4>
+                        <p class="" style="text-align: justify;" th:utext="${story.getContent()}">
+                        </p>
+                        <div class="text-center">
+                        <i class="fa fa-eye" aria-hidden="true"></i> <a class="text-center" th:text="${story.getView()}" ></a>
+                        </div>
+                        <div class="text-center">
+                            <div sec:authorize="hasAnyRole('ROLE_AUTHOR')">
+                                <div th:if="${story.isAuthor()}">
+                                    <button type="button" class="btn btn-primary"><a
+                                            th:href="@{/add-chapter(id= ${story.getId()})}" style="color: white">Thêm
+                                        chapter</a></button>
+                                    <button type="button" class="btn btn-success"><a
+                                            th:href="@{/update-story(id= ${story.getId()})}" style="color: white">Cập
+                                        nhật</a></button>
+                                </div>
+                            </div>
+                        </div>
+                        <p th:text="${error}" style="color: red" class="text-center"></p>
+
+
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="chapter : ${story.getChapters()}">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <a th:if="${story.isAuthor() || chapter.isPaymentStatus() || chapter.getPrice() == 0 || story.isAdmin()}"
+                                           th:text="${chapter.getName()}"
+                                           th:href="@{/chapter-detail(id=${chapter.getId()})}"></a>
+
+                                        <a th:if="${!story.isAuthor() && !chapter.isPaymentStatus() && chapter.getPrice()>0 && !story.isAdmin()}" href="#"
+                                           th:text="${chapter.getName()}"></a>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <p class="text-center"><a style="color: darkred; font-weight: bold"
+                                                                  th:text="${chapter.getPrice()}"></a>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2" th:if="${chapter.getPrice()> 0}">
+                                        <div th:if="${chapter.isPaymentStatus() && !story.isAuthor()}">
+                                            <p>Đã thanh toán</p>
+                                        </div>
+                                        <div th:if="${story.isAdmin() && story.isAuthor()}">
+                                            <p>Tác giả</p>
+                                        </div>
+                                        <div th:if="${!story.isAdmin() && story.isAuthor()}">
+                                            <p>Tác giả</p>
+                                        </div>
+                                        <div th:if="${story.isAdmin() && !story.isAuthor()}">
+                                            <p>Quản trị viên</p>
+                                        </div>
+                                        <div th:if="${!chapter.isPaymentStatus() && !story.isAdmin() && !story.isAuthor()}">
+                                            <button type="button" class="btn btn-danger">
+                                                <a th:href="@{/payment(chapter_id=${chapter.getId()})}"
+                                                   style="color: white" onclick="paymentConfirm()"> Nạp tiền </a>
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" th:if="${chapter.getPrice() == 0}">
+                                        <div th:if="${story.isAuthor() && !story.isAdmin()}">
+                                            <p>Tác giả</p>
+                                        </div>
+                                        <div th:if="${story.isAuthor() && story.isAdmin()}">
+                                            <p>Tác giả</p>
+                                        </div>
+    
+                                        <div th:if="${!story.isAuthor() && story.isAdmin()}">
+                                            <p>Quản trị viên</p>
+                                        </div>
+                                        <div th:if="${!story.isAuthor() && !story.isAdmin()}">
+                                            <p>Miễn phí</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            
+                        </li>
+                    </ul>
+    
+                    <h5 class="text-center text-uppercase mt-3" th:if="${(#lists.isEmpty(chapterDraft) == false) && story.isAuthor() }">Chương truyện đang chờ kích hoạt</h5>
+                    <ul class="list-group" th:if="${story.isAuthor()}">
+                        <li class="list-group-item" th:each="chapter : ${chapterDraft}" th:if="${#lists.isEmpty(chapterDraft) == false}">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a th:text="${chapter.getChapterName()}"></a>
+                                </div>
+                                <div class="col-md-2">
+                                    <a th:text="${chapter.getTime()}"></a>
+                                </div>
+                
+                                <div class="col-md-2">
+                                    <p class="text-center"><a style="color: darkred; font-weight: bold"
+                                                              th:text="${chapter.getPrice()}"></a>
+                                    </p>
+                                </div>
+                                <div class="col-md-4" >
+                                    <a th:href="@{/chapter-draft/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code='ACTIVE')}">
+                                        <button class="btn btn-success">Bật</button>
+                                    </a>
+                                    <a th:href="@{/chapter-draft/status(story_id= ${chapter.getStory().getId()}, chapter_id= ${chapter.getId()}, code='DELETE')}">
+                                        <button class="btn btn-danger">Xoá</button>
+                                    </a>
+                                    <a th:href="@{/update-chapter-draft(id=${chapter.getId()})}">
+                                        <button class="btn btn-primary">Cập nhật</button>
+                                    </a>
+                                    
+                                </div>
+                            </div>
+        
+                        </li>
+                    </ul>
+                    
+                </div>
+
+
+            </div>
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <li class="list-group-item bg-dark" style="color: lightgreen; font-weight: 600">TRUYỆN MỚI NHẤT</li>
+                    <li class="list-group-item newest" th:each="story : ${storiesNewest}"><a
+                            th:href="@{/story-detail(id=${story.getId()},error=null)}" th:text="${story.getStoryName()}"
+                            style="color: black;"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function paymentConfirm() {
+        confirm("Bạn chắn chắn muốn thanh toán chương truyện này");
+    }
+</script>
+
+<section th:replace="/layout/footer"></section>
+</body>

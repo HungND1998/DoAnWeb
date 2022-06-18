@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Spring Boot + Bootstrap</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+<section th:replace="/layout/header"></section>
+
+<section class="body">
+    <div class="container" style="padding-top: 25px">
+        <h4 class="text-uppercase pt-4 pb-4 text-center">Hướng dẫn nạp tiền</h4>
+        <div class="topup">
+            <h5>Lưu ý trước khi nạp tiền:</h5>
+            <ul>
+                <li>Mỗi hình thức nạp tiền đều có yêu cầu rõ ràng, vui lòng thực hiện theo hướng dẫn.</li>
+            </ul>
+            <h5>Ngân hàng được hỗ trợ:</h5>
+            <ul>
+                <li>Vietcombank: 192839281  Nguyen Dinh Hung</li>
+                <li>TPBank: 299318238 Nguyen Dinh Hung</li>
+                <li>Techcombank: 102928182 Nguyen Dinh Hung</li>
+            </ul>
+            <h5>Ví được hỗ trợ:</h5>
+            <ul>
+                <li>Momo: 0398002928</li>
+                <li>VNPAY: 0398002928</li>
+            </ul>
+            <h5>Hướng dẫn nạp tiền:</h5>
+            <ul>
+                <li>Chọn số tiền cần nạp, nội dung nạp theo cú pháp: username:[username]-Nap tien</li>
+            </ul>
+            <h5>Lưu ý:</h5>
+            <ul>
+                <li>Mọi trường hợp nạp tiền lỗi vui lòng liên hệ để chúng tôi xử lý sớm nhất cho bạn</li>
+            </ul>
+            
+        </div>
+    
+    </div>
+</section>
+
+<section th:replace="/layout/footer"></section>
+</body>

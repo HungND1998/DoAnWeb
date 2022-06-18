@@ -1,0 +1,14 @@
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{/}">Truyện online</a>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <img th:src="@{${user.getAvatar()}}" style="padding-right: 10px;"  width="30px" height="30px">
+            <a th:text="${user.getName()}" th:href="@{/user}" style="color: white"></a>
+        </li>
+    </ul>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" th:href="@{/logout}"><button class="btn btn-success">Đăng xuất</button></a>
+        </li>
+    </ul>
+</nav>

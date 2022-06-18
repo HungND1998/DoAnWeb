@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Trang quản trị</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{http://localhost:9000/truyen/dashboard.css}">
+</head>
+<body>
+
+<section th:replace="/admin/layout/navbar"></section>
+<div class="container-fluid">
+    <div class="row">
+        <section th:replace="/admin/layout/sidebar"></section>
+        
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="text-uppercase text-center">quản lý thanh toán</h4>
+                    <div th:if="${show == 'payment'}">
+                        <form method="POST" th:action="@{/admin/payment/search}" th:object="${searchPaymentDTO}">
+                            <div class="d-flex justify-content-around mb-3">
+                                <div class="p-2"><a th:href="@{/admin/payment/show-topup}">
+                                    <button type="button" class="btn btn-outline-primary">Hiển thị nạp tiền</button>
+                                </a></div>
+                                <div class="p-2">
+                                    <form>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="Tìm kiếm"
+                                                   aria-label="Tìm kiếm" aria-describedby="basic-addon2"
+                                                   th:field="*{search}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+                                            </div>
+
+                                        </div>
+                                        <div class="text-center">
+                                            <input type="checkbox" th:field="*{author}" th:value="author" id="author">
+                                            Tác giả
+                                            <input type="checkbox" th:field="*{user}" th:value="user" id="user"
+                                                   class="ml-3"> Người dùng
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="p-2"><a href="#" style="opacity: 0">
+                                    <button class="btn btn-info" disabled>Hiển thị nạp tiền</button>
+                                </a></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div th:if="${show == 'topup'}">
+                        <form method="POST" th:action="@{/admin/payment/search-topup}" th:object="${searchPaymentDTO}">
+
+                            <div class="d-flex justify-content-around mb-3">
+                                <div class="p-2"><a th:href="@{/admin/payment}">
+                                    <button type="button" class="btn btn-outline-primary">Hiển thị thanh toán</button>
+                                    </a>
+                                </div>
+
+                                <div class="p-2">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="Tìm kiếm"
+                                                   aria-label="Tìm kiếm" aria-describedby="basic-addon2"
+                                                   th:field="*{search}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-success" type="submit">Tìm kiếm</button>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="p-2">
+                                    <a th:href="@{/admin/payment/topup}">
+                                        <button class="btn btn-outline-info" type="button">Nạp tiền tài khoản</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+                </div>
+            
+            </div>
+            <div th:if="${show == 'payment'}">
+                <div class="table">
+                    <table class="table table-bordered table-hover table-light table-striped table-sm">
+                        <thead class="thead-dark ">
+                        <tr class="text-center">
+                            <th>ID</th>
+                            <th>Người thanh toán</th>
+                            <th>Tác giả</th>
+                            <th>ID truyện</th>
+                            <th>ID chương truyện</th>
+                            <th>Số tiền thanh toán</th>
+                            <th>Tỉ lệ</th>
+                            <th>Ngày giờ thanh toán</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr th:each="payment : ${paymentDTO}">
+                            <td th:text="${payment.getId()}" class="align-middle"></td>
+                            <td th:text="${payment.getUser()}" class="align-middle"></td>
+                            <td th:text="${payment.getAuthor()}" class="align-middle"></td>
+                            <td th:text="${payment.getStoryId()}" class="align-middle"></td>
+                            <td th:text="${payment.getChapterId()}" class="align-middle"></td>
+                            <td th:text="${payment.getAmount()}" class="align-middle"></td>
+                            <td th:text="${payment.getChargeRate()}" class="align-middle"></td>
+                            <td th:text="${payment.getPaymentDate()}" class="align-middle"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="doanh-thu">
+                    <p>Doanh thu tháng: <a th:text="${doanhThuThang}"></a></p>
+                    <p>Doanh thu năm: <a th:text="${doanhThuNam}"></a></p>
+                </div>
+            </div>
+            <div th:if="${show=='topup'}">
+                <div class="table">
+                    <table class="table table-bordered table-hover table-light table-striped table-sm">
+                        <thead class="thead-dark ">
+                        <tr class="text-center">
+                            <th>ID</th>
+                            <th>Tài khoản</th>
+                            <th>Số tiền</th>
+                            <th>Ngày giờ nạp tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr th:each="topup : ${topupDTOS}">
+                            <td th:text="${topup.getId()}" class="align-middle"></td>
+                            <td th:text="${topup.getUser()}" class="align-middle"></td>
+                            <td th:text="${topup.getAmount()}" class="align-middle"></td>
+                            <td th:text="${topup.getCreated_at()}" class="align-middle"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="topup">
+                    <p>Nạp tiền tháng: <a th:text="${topupThang}"></a></p>
+                    <p>Nạp tiền năm: <a th:text="${topupNam}"></a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    var author = document.getElementById("author");
+    var user = document.getElementById("user");
+    
+    author.onclick = function () {
+        if (author.checked == true) {
+            user.checked = false;
+        }
+        
+        if (author.checked == false) {
+            user.checked = true;
+        }
+    }
+    user.onclick = function () {
+        if (user.checked == true) {
+            author.checked = false;
+        }
+        
+        if (user.checked == false) {
+            author.checked = true;
+        }
+    }
+</script>
+
+</body>
+</html>

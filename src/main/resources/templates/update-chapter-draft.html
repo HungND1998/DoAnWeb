@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:9000/truyen/richtext/richtext.min.css"/>
+    <script src="http://localhost:9000/truyen/richtext/jquery.richtext.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<section th:replace="/layout/header"></section>
+<div class="container p-3">
+    <form method="post" th:object="${chapterDTO}" th:action="@{/update-chapter-draft}" >
+        <h4 class="text-center">
+            Cập nhật chương
+        </h4>
+        <div class="form-group ">
+            <label for="name" class="sr-only">Tên chương</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Tên chương"
+                   required autofocus >
+        </div>
+        
+        <div class="form-group ">
+            <textarea class="content" th:field="*{content}"></textarea>
+        </div>
+    
+        
+        <div class="form-group ">
+            <label for="name" class="sr-only">Số tiền</label>
+            <input type="text" id="name" th:field="*{price}" class="form-control" placeholder="Số tiền"
+                   required autofocus>
+        </div>
+        <div class="form-group" id="time" >
+            <label for="name" class="sr-only">nhập ngày giờ</label>
+            <input type="text" id="time" th:field="*{time}" class="form-control" placeholder="Nhập ngày (dd/MM/yyyy) ">
+        </div>
+    
+        <input type="text" th:field="*{storyId}" style="display: none">
+        <input type="text" th:field="*{id}" style="display: none">
+       
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Cập nhật chương</button>
+        </div>
+    </form>
+</div>
+
+<section th:replace="/layout/footer"></section>
+
+<script>
+    CKEDITOR.replace("content");
+</script>
+</script>
+</body>
+</html>

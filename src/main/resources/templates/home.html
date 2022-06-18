@@ -1,0 +1,147 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Truyện Online</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Make the image fully responsive */
+        .carousel-inner img {
+            width: 100%;
+        }
+        
+        .card-text {
+            width: 100%;
+            height: 100px;
+            overflow: hidden;
+        }
+        
+        .card-title {
+            width: 100%;
+            height: 50px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<section th:replace="/layout/header"></section>
+<section th:if="${slides != null}" th:utext="${slides}">
+
+</section>
+
+<div sec:authorize="hasAnyRole('ROLE_AUTHOR')">
+    <div class="container" style="padding-top: 25px">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="truyen-noi-bat">
+                    <h4><a>TRUYỆN CỦA TÔI</a></h4>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success"><a th:href="@{/add-story}" style="color:white;">Thêm truyện</a></button>
+            </div>
+        </div>
+        <div class="row" style="padding-top:25px">
+            
+            <div class="col-3 pb-3" th:each="story: ${stories}">
+                
+                <div th:if="${story.isStatus()}">
+                    <div class="card" style="width: 90%; margin-right: auto; margin-left: auto">
+                        <img class=" card-img-top" th:src="@{${story.getImage()}}" alt="Card image cap" width="100%"
+                             height="150px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:utext="${story.getStoryName()}"></h5>
+                            <p class="card-text" th:utext="${story.getDescription()}"></p>
+                            <a th:href="@{/story-detail(id=${story.getId()})}"
+                               class="btn btn-outline-success my-2 my-sm-0">Đọc
+                                thêm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<div class="container pt-2" th:if="${#lists.isEmpty(topNew) == false}" >
+    <section >
+        <a class="text-uppercase" style="color:black; font-size: 16px; font-weight: bold"
+           th:href="@{/top-new}">Truyện mới nhất</a>
+        <div class="row" style="padding-top:25px">
+            
+            <div class="col-3 pb-3" th:each="storyNew: ${topNew}">
+                <div class="card" style="width: 90%; margin-right: auto; margin-left: auto">
+                    <img class=" card-img-top" th:src="@{${storyNew.getImage()}}" alt="Card image cap"
+                         width="100%"
+                         height="150px">
+                    <div class="card-body">
+                        <h5 class="card-title" th:utext="${storyNew.getStoryName()}"></h5>
+                        <p class="card-text" th:utext="${storyNew.getDescription()}"></p>
+                        <a th:href="@{/story-detail(id=${storyNew.getId()})}"
+                           class="btn btn-outline-success my-2 my-sm-0">Đọc thêm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </section>
+</div>
+
+<div class="container pt-2" th:if="${#lists.isEmpty(topView) == false}" >
+    <section>
+        <a class="text-uppercase" style="color:black; font-size: 16px; font-weight: bold"
+           th:href="@{/top-view}">Xem nhiều nhất</a>
+        <div class="row" style="padding-top:25px">
+        
+            <div class="col-3 pb-3" th:each="storyView: ${topView}">
+                <div class="card" style="width: 90%; margin-right: auto; margin-left: auto">
+                    <img class=" card-img-top" th:src="@{${storyView.getImage()}}" alt="Card image cap"
+                         width="100%"
+                         height="150px">
+                    <div class="card-body">
+                        <h5 class="card-title" th:utext="${storyView.getStoryName()}"></h5>
+                        <p class="card-text" th:utext="${storyView.getDescription()}"></p>
+                        <a th:href="@{/story-detail(id=${storyView.getId()})}"
+                           class="btn btn-outline-success my-2 my-sm-0">Đọc thêm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+</div>
+
+<div class="container" style="padding-top: 25px">
+    <section th:each="category: ${categories}">
+        <div class="pt-2 pb-2">
+            <div th:if="${category.isStatus() == true && #lists.isEmpty(category.getStories()) == false}">
+                <div class="">
+                    <a class="text-uppercase" style="color:black; font-size: 16px; font-weight: bold"
+                       th:text="${category.getCategoryName()}" th:href="@{/category(id=${category.getId()})}"></a>
+                </div>
+                <div class="row" style="padding-top:25px">
+                    
+                    <div class="col-3 pb-3" th:each="story: ${category.getStories()}" th:if="${story.isStatus()} == true">
+                        <div class="card" style="width: 90%; margin-right: auto; margin-left: auto">
+                            <img class=" card-img-top" th:src="@{${story.getImage()}}" alt="Card image cap"
+                                 width="100%"
+                                 height="150px">
+                            <div class="card-body">
+                                <h5 class="card-title" th:utext="${story.getStoryName()}"></h5>
+                                <p class="card-text" th:utext="${story.getDescription()}"></p>
+                                <a th:href="@{/story-detail(id=${story.getId()})}"
+                                   class="btn btn-outline-success my-2 my-sm-0">Đọc thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+    </section>
+</div>
+
+<section th:replace="/layout/footer"></section>
+</body>

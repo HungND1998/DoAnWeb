@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:9000/truyen/richtext/richtext.min.css"/>
+    <script src="http://localhost:9000/truyen/richtext/jquery.richtext.min.js"></script>
+    <script src="https://cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<section th:replace="/layout/header"></section>
+<div class="container p-3">
+    <form method="post" th:object="${story}" th:action="@{/update-story}" enctype="multipart/form-data">
+        <h4 class="text-center">
+            Cập nhật truyện
+        </h4>
+        
+        <div class="form-group " style="display: none">
+            <label for="name" class="sr-only">ID</label>
+            <input type="text" id="id" th:field="*{id}" class="form-control" placeholder="ID"
+                   required autofocus>
+        </div>
+        <div class="form-group ">
+            <label for="name" class="sr-only">Tên truyện</label>
+            <input type="text" id="name" th:field="*{storyName}" class="form-control" placeholder="Tên truyện"
+                   required autofocus>
+        </div>
+        
+        <div class="form-group ">
+            <label for="name" class="sr-only">Mô tả truyện</label>
+            <input type="text" id="name" th:field="*{description}" class="form-control" placeholder="Thêm mô tả"
+                   required autofocus>
+        </div>
+        
+        <div class="form-group ">
+            <textarea class="content" th:field="*{content}"></textarea>
+        </div>
+        <div class="form-group">
+        
+        </div>
+        <div class="file-input p-2">
+            <input type="file" name="file">
+        </div>
+        <p>
+            <label>Danh mục:
+                
+                <input type="checkbox" name="categories"
+                       th:each="category : ${categories}"
+                       th:text="${category.getCategoryName()}"
+                       th:value="${category.getId()}"
+                       th:field="*{categories}" style="margin: revert;"
+                />
+            </label>
+        </p>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Cập nhật truyện</button>
+        </div>
+    </form>
+</div>
+
+<section th:replace="/layout/footer"></section>
+
+<script>
+    CKEDITOR.replace("content");
+</script>
+</script>
+</body>
+</html>

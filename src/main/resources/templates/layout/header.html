@@ -1,0 +1,78 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">Truyện Online</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/}"> Trang chủ <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="danhmuc" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Thể loại
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="danhmuc">
+                            <a class="dropdown-item " th:href="@{/top-new}">Truyện mới nhất</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item " th:href="@{/top-view}">Xem nhiều nhất</a>
+                            <div class="dropdown-divider"></div>
+                            
+                            <div th:each="category: ${categories}">
+                                <div th:if="${category.isStatus()}">
+                                    <a class="dropdown-item " th:href="@{/category(id=${category.getId()})}"
+                                       th:text="${category.categoryName}"></a>
+                                    <div th:if="${category.getId() <(#lists.size(categories))}">
+                                        <div class="dropdown-divider"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    
+                    <li class="nav-item pr-4">
+                        <a class="nav-link" th:href="@{/topup-info}">Nạp tiền</a>
+                    </li>
+                    <li>
+                        <div sec:authorize="isAnonymous()">
+                            <a href="/login" class="pr-3">
+                                <button type="button" class="btn btn-outline-success my-2 my-sm-0"> Đăng nhập</button>
+                            </a>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div sec:authorize="isAuthenticated()">
+                            <img th:src="${user.getAvatar()}" width="30px" height="30px"/>
+                            <a th:text="${user.name}" style="color: green;" th:href="@{/user}"></a>
+
+                            <a href="/logout" class="pr-3">
+                                <button type="button" class="btn btn-outline-success my-2 my-sm-0"> Đăng xuất</button>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                            <a th:href="@{/admin/dashboard}" class="pr-3">
+                                <button type="button" class="btn btn-success my-2 my-sm-0">Quản lý</button>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0" method="get" th:action="@{/search}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm" aria-label="Search"
+                           th:name="name">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+</header>
